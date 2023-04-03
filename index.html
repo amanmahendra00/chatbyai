@@ -24,7 +24,6 @@
         const chatbotMessages = document.querySelector('#chatbot-messages');
         const chatbotInput = document.querySelector('#chatbot-input');
         const chatbotSend = document.querySelector('#chatbot-send');
-        const apiKey = process.env.API_KEY;
 
         const API_URL = 'https://api.openai.com/v1';
 
@@ -32,7 +31,7 @@
 
         const headers = {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ${process.env.API_KEY}'
+            'Authorization': 'Bearer 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'
         };
 
         const chatbotSendMessage = (userMessage, chatbotMessage) => {
