@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chatbot Example</title>
+<link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div id="chatbot-container">
+        <div id="chatbot-messages">
+            <div class="chatbot-message">Hello! How can I help you?</div>
+        </div>
+        <div id="chatbot-input-container">
+            <input type="text" id="chatbot-input" placeholder="Type your message here">
+            <button id="chatbot-send">Send</button>
+<button id="clear-button">Clear chat</button>
+        </div>
+    </div>
+    <script>
+        const chatbotContainer = document.querySelector('#chatbot-container');
+        const chatbotMessages = document.querySelector('#chatbot-messages');
+        const chatbotInput = document.querySelector('#chatbot-input');
+        const chatbotSend = document.querySelector('#chatbot-send');
+
+        const API_URL = 'https://api.openai.com/v1';
+
+        const completionEndpoint = `${API_URL}/completions`;
+
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer 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'
+        };
+
+        const chatbotSendMessage = (userMessage, chatbotMessage) => {
+  const messageContainer = document.createElement('div');
+  messageContainer.classList.add('chatbot-message-container');
+  
+  const userMessageElement = document.createElement('div');
+  userMessageElement.classList.add('chatbot-message', 'user-message');
+  userMessageElement.textContent = userMessage;
+  
+  const chatbotMessageElement = document.createElement('div');
+  chatbotMessageElement.classList.add('chatbot-message');
+  chatbotMessageElement.textContent = chatbotMessage;
+  
+  messageContainer.appendChild(userMessageElement);
+  messageContainer.appendChild(chatbotMessageElement);
+  
+  chatbotMessages.appendChild(messageContainer);
+  chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+};
+
+chatbotInput.addEventListener('keydown', (event) => {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        chatbotSend.click();
+    }
+});
+
+        chatbotSend.addEventListener('click', () => {
+  const input = chatbotInput.value.trim();
+  if (!input) {
+    return;
+  }
+const clearButton = document.querySelector('#clear-button');
+
+clearButton.addEventListener('click', () => {
+    chatbotMessages.innerHTML = '<div class="chatbot-message">Chat cleared.</div>';
+    setTimeout(() => {
+        chatbotMessages.innerHTML = '';
+    }, 2000); // Clear chat after 2 seconds
+});
+
+
+  const data = {
+    prompt: input,
+    max_tokens: 1000,
+    temperature: 0.3,
+    model: 'text-davinci-002'
+  };
+
+  axios.post(completionEndpoint, data, { headers })
+    .then((response) => {
+      const message = response.data.choices[0].text.trim();
+      chatbotSendMessage(input, message);
+      chatbotInput.value = '';
+    })
+    .catch((error) => {
+      console.log(error);
+      chatbotSendMessage(input, 'Sorry, something went wrong. Please try again later.');
+    });
+});
+    </script>
+</body>
+</html>
