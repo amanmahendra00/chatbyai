@@ -32,7 +32,7 @@
 
         const headers = {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer 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'
+            'Authorization': 'Bearer ${process.env.API_KEY}'
         };
 
         const chatbotSendMessage = (userMessage, chatbotMessage) => {
